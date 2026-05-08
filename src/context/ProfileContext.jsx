@@ -1,21 +1,34 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 
 const ProfileContext = createContext();
 
 export function ProfileProvider({ children }) {
+  const [profileImage, setProfileImage] = useState(null);
+  const [name, setName] = useState(localStorage.getItem("profileName") || "");
 
-  const [profileImage, setProfileImage] = useState(() => {
-    return localStorage.getItem("profileImage");
-  });
+  useEffect(() => {
+    const savedImage = localStorage.getItem("profileImage");
+    const savedName = localStorage.getItem("profileName");
 
-  const saveProfileImage = (img) => {
-    setProfileImage(img);
-    localStorage.setItem("profileImage", img);
+    if (savedImage) setProfileImage(savedImage);
+    if (savedName) setName(savedName);
+  }, []);
+
+  const saveProfile = (image, userName) => {
+    setProfileImage(image);
+    setName(userName);
+
+    localStorage.setItem("profileImage", image);
+    localStorage.setItem("profileName", userName);
   };
 
   return (
     <ProfileContext.Provider
-      value={{ profileImage, saveProfileImage }}
+      value={{
+        profileImage,
+        name,
+        saveProfile,
+      }}
     >
       {children}
     </ProfileContext.Provider>

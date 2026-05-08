@@ -2,9 +2,12 @@ import logo from "../assets/logo2.png";
 import { useState } from "react";
 import { FaRegBell, FaUserCircle, FaBars, FaSearch } from "react-icons/fa";
 import { useProfile } from "../context/ProfileContext";
+import NotificationsPanel from "../Pages/NotificationsPanel";
+
 function Header() {
   const [open, setOpen] = useState(false);
-  const { profileImage } = useProfile();
+  const { profileImage, name } = useProfile();
+  const [openNotifications, setOpenNotifications] = useState(false);
   return (
     <div>
       <nav className="bg-[#243B56]">
@@ -23,19 +26,27 @@ function Header() {
                 />
               </div>
             </div>
-            <div className="flex items-center gap-4 text-white">
-              <div className="relative cursor-pointer">
+            <div className="flex items-center gap-3 text-white">
+              <div
+                className="relative cursor-pointer"
+                onClick={() => setOpenNotifications(true)}
+              >
                 <FaRegBell className="text-xl text-white hover:text-gray-300 transition" />
+
                 <span className="absolute -top-1 -right-1 h-2 w-2 bg-red-500 rounded-full" />
               </div>
+
               {profileImage ? (
                 <img
                   src={profileImage}
                   className="w-9 h-9 rounded-full object-cover"
                 />
               ) : (
-                <FaUserCircle className="text-3xl" />
+                <FaUserCircle className="text-3xl text-gray-400 bg-white rounded-full" />
               )}
+
+              <span className="font-medium">{name || "Doctor"}</span>
+
               <button
                 className="md:hidden text-xl"
                 onClick={() => setOpen(!open)}
@@ -62,6 +73,10 @@ function Header() {
           </div>
         )}
       </nav>
+      <NotificationsPanel
+        open={openNotifications}
+        onClose={() => setOpenNotifications(false)}
+      />
     </div>
   );
 }

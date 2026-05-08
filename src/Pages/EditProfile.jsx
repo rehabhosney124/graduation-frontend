@@ -1,5 +1,5 @@
-import Header from "../components/Header";
-import Sidebar from "../components/Sidebar";
+import Header from "../Components/Header";
+import Sidebar from "../Components/Sidebar";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaCamera } from "react-icons/fa";
@@ -10,7 +10,7 @@ import { FaUserCircle } from "react-icons/fa";
 export default function EditProfile() {
   const navigate = useNavigate();
 
-  const { profileImage, saveProfileImage } = useProfile();
+  const { profileImage, saveProfile } = useProfile();
 
   const [previewImage, setPreviewImage] = useState(profileImage);
 
@@ -39,17 +39,31 @@ export default function EditProfile() {
     const file = e.target.files[0];
 
     if (file) {
-      const url = URL.createObjectURL(file);
-      setPreviewImage(url);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImage(reader.result);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    saveProfileImage(previewImage);
+    if (
+      !formData.name ||
+      !formData.universityEmail ||
+      !formData.email ||
+      !formData.phone ||
+      !formData.password
+    ) {
+      alert("Please fill all fields");
+      return;
+    }
 
-    navigate("/doctor");
+    saveProfile(previewImage, formData.name);
+
+    navigate("/doctor-dashboard");
   };
   return (
     <div className="flex min-h-screen bg-gray-200">
@@ -68,11 +82,11 @@ export default function EditProfile() {
               {previewImage ? (
                 <img
                   src={previewImage}
-                  className="w-32 h-32 rounded-full object-cover "
+                  className="w-32 h-32 bg-black rounded-full object-cover "
                 />
               ) : (
                 <div className="w-24 h-24 rounded-full bg-black  flex items-center justify-center">
-                  <FaUserCircle className="text-white text-5xl" />
+                  <FaUserCircle className="text-white bg-black text-5xl" />
                 </div>
               )}
 
@@ -217,7 +231,14 @@ export default function EditProfile() {
             <div className="md:col-span-3">
               <button
                 type="submit"
-                className="bg-blue-600 text-white px-15 py-3 rounded-md hover:bg-blue-700 transition"
+                disabled={
+                  !formData.name ||
+                  !formData.universityEmail ||
+                  !formData.email ||
+                  !formData.phone ||
+                  !formData.password
+                }
+                className="bg-blue-600 disabled:bg-gray-400 text-white px-15 py-3 rounded-md hover:bg-blue-700 transition"
               >
                 Save Changes
               </button>
