@@ -1,13 +1,21 @@
 import { createBrowserRouter } from "react-router-dom";
-import Login from "../Pages/Login";
 import ForgetPassword from "../Pages/ForgetPassword";
 import VerifyOTP from "../Pages/VerifyOTP";
 import ResetPassword from "../Pages/ResetPassword";
 import Doctor from "../Pages/Doctor";
 import Tasks from "../Components/Tasks";
 import AiFilterLayout from "../Pages/AiFilterLayout";
+import ProjectsManagedTeams from "../Pages/ProjectsManagedTeams";
+import ProjectDetails from "../Pages/ProjectDetails";
+import JoinRequests from "../Pages/JoinRequests";
+import StudentDashboard from "../Pages/studentDashboard";
+import NotificationsPage from "../Pages/Notifications";
+import ProjectTypes from "../Pages/projectType";
+import UploadProjectIdea from "../Pages/UploadProjectIdea";
+import Login from "../Pages/auth/Login";
+// import EditStudentProfile from "../Pages/EditStudentProfile";
 import ProtectedRoute from "../Components/ProtectedRoute";
-import EditProfile from "../Pages/EditProfile";
+// import EditProfile from "../Pages/EditProfile";
 import DoctorDashboard from "../Pages/DoctorDashboard";
 import Milestones from "../Pages/Milestones";
 import TeamProjectRules from "../Pages/TeamProjectRules";
@@ -17,8 +25,9 @@ import MilestonesSetup from "../Pages/Milestonessetup";
 import SuggestionsProjectsPage from "../Pages/SuggestionsprojectsPage";
 import TeamsSection from "./../Pages/Teamspage";
 import FinalDiscussionsSection from "../Pages/Finaldiscussionssection";
+import EditProfile from "../Pages/EditStudentProfile";
 export const router = createBrowserRouter([
-  { path: "/", element: <Login /> },
+  { path: "/logingit ", element: <Login /> },
   { path: "/forget-password", element: <ForgetPassword /> },
   { path: "/verify-otp", element: <VerifyOTP /> },
   { path: "/reset-password", element: <ResetPassword /> },
@@ -121,6 +130,40 @@ export const router = createBrowserRouter([
           { path: "team", element: <div>Team Content</div> },
         ],
       },
+      {
+        path: "projects",
+        element: <ProjectsManagedTeams />,
+      },
+      {
+        path: "project-details",
+        element: <ProjectDetails />,
+      },
+      {
+        path: "join-requests",
+        element: <JoinRequests />,
+      },
     ],
+  },
+
+  // 👇 دول برا root route
+  {
+    path: "student-dashboard",
+    element: <StudentDashboard />,
+  },
+  {
+    path: "notifications",
+    element: <NotificationsPage />,
+  },
+  {
+    path: "project-types",
+    element: <ProjectTypes />,
+  },
+  {
+    path: "Upload-Project-Idea",
+    element: <UploadProjectIdea />,
+  },
+    {
+    path: "/profile",
+    element: <EditProfile />,
   },
 ]);

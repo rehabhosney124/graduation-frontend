@@ -1,3 +1,4 @@
+
 import Header from "../Components/Header";
 import Sidebar from "../Components/Sidebar";
 import { useState } from "react";
@@ -248,4 +249,5 @@ export default function EditProfile() {
       </div>
     </div>
   );
+
 }
