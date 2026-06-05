@@ -5,12 +5,12 @@ class Auth {
     return submitRequestAsync("login", "POST", credentials);
   }
   static updateProfile(data) {
-    return submitRequestAsync("profile/update", "POST", data);
+    return submitRequestAsync("profile", "POST", data);
   }
 
-  static updateProfile() {
-    return submitRequestAsync("profile/update", "POST", data);
-  }
+    static getHome() {
+  return submitRequestAsync(`home`, "GET");
+} 
 
 }
 

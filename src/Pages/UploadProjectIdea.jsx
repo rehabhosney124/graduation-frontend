@@ -1,187 +1,399 @@
-import { FiUploadCloud, FiImage } from "react-icons/fi";
-const UploadProjectIdea = () => {
+import { FaPaperclip, FaChevronDown, FaLightbulb } from "react-icons/fa";
+import "./uploadProjectIdea.css";
+import { useEffect, useState } from "react";
+import Project from "../Services/Project.model";
+export default function UploadProjectIdea() {
+  const [departments, setDepartments] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [projectTypes, setProjectTypes] = useState([]);
+  const [teamMembers, setTeamMembers] = useState([]);
+  const [leaderId, setLeaderId] = useState(null);
+  const [tools, setTools] = useState(["Figma", "React", "Python", "Firebase"]);
+  const [toolInput, setToolInput] = useState("");
+  const [files, setFiles] = useState(null);
+  const [image, setImage] = useState(null);
+  const [category, setCategory] = useState("Software Engineering");
+  const [form, setForm] = useState({
+    title: "",
+    description: "",
+    problem_statement: "",
+    solution: "",
+    department_id: "",
+    project_type_id: "",
+    technologies: tools,
+    leader_user_id: leaderId,
+  });
+  const handleFileChange = (e) => {
+    setFiles(e.target.files[0]);
+  };
+
+  const handleImageChange = (e) => {
+    setImage(e.target.files[0]);
+  };
+const addTool = () => {
+  if (!toolInput.trim()) return;
+
+  setTools((prev) => [...prev, toolInput.trim()]);
+  setToolInput("");
+};
+  useEffect(() => {
+  setForm((prev) => ({
+    ...prev,
+    technologies: tools,
+  }));
+}, [tools]);
+useEffect(() => {
+  setForm((prev) => ({
+    ...prev,
+    attachment: files,
+  }));
+}, [files]);
+
+useEffect(() => {
+  setForm((prev) => ({
+    ...prev,
+    image: image,
+  }));
+}, [image]);
+const handleSubmit = async () => {
+  try {
+    const formData = new FormData();
+
+    formData.append("title", form.title);
+    formData.append("description", form.description);
+    formData.append("problem_statement", form.problem_statement);
+    formData.append("solution", form.solution);
+    formData.append("department_id", form.department_id);
+    formData.append("project_type_id", form.project_type_id);
+    formData.append("leader_user_id", form.leader_user_id);
+
+    formData.append("category", category); // 👈 هنا المهم
+
+    formData.append("technologies", JSON.stringify(form.technologies));
+
+    if (form.attachment) formData.append("attachment", form.attachment);
+    if (form.image) formData.append("image", form.image);
+
+    const res = await Project.uploadIdea(formData);
+
+    console.log("Success:", res);
+
+  } catch (error) {
+    console.log("Submit error:", error);
+  }
+};
+const removeTool = (index) => {
+  setTools((prev) => prev.filter((_, i) => i !== index));
+};
+const handleKeyDown = (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    addTool();
+  }
+};
+useEffect(() => {
+  setForm((prev) => ({
+    ...prev,
+    technologies: tools,
+  }));
+}, [tools]);
+  useEffect(() => {
+    const fetchFormData = async () => {
+      try {
+        const res = await Project.getFormData();
+
+        const data = res;
+        console.log("Form Data:", data);
+        setTeamMembers(data.team_members);
+
+        setLeaderId(data.team.leader_user_id);
+
+        setDepartments(data.departments);
+        setProjectTypes(data.project_types);
+      } catch (error) {
+        console.log("Error loading form data:", error);
+      }
+    };
+
+    fetchFormData();
+  }, []);
+  useEffect(() => {
+    const fetchDepartments = async () => {
+      try {
+        setLoading(true);
+        const res = await Project.getDepartments();
+        setDepartments(res);
+      } catch (error) {
+        console.log("Error loading departments:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDepartments();
+  }, []);
+  useEffect(() => {
+    const fetchProjectTypes = async () => {
+      try {
+        const res = await Project.getProjectTypes();
+        setProjectTypes(res);
+      } catch (error) {
+        console.log("Error loading project types:", error);
+      }
+    };
+
+    fetchProjectTypes();
+  }, []);
   return (
-    <div className="bg-gray-100 min-h-screen p-8">
+    <div className="upload-page">
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="upload-header">
         <div>
-          <h2 className="text-xl font-semibold">
-            Upload Project Idea <span>💡</span>
-          </h2>
-          <p className="text-sm text-gray-500">
-            Start your graduation project by submitting your idea.
-          </p>
-        </div>
-
-      </div>
-
-      {/* Form Card */}
-      <div className="bg-white rounded-xl p-6 shadow">
-        <div className="grid grid-cols-2 gap-6">
-          {/* Left */}
-          <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium">
-                Project Title <span className="text-red-500">*</span>
-              </label>
-              <input
-                placeholder="Enter your project name"
-                className="w-full border border-[#D9D9D9] rounded p-2 mt-1"
-              />
-            </div>
-
-            <div>
-              <label className="text-sm font-medium">
-                Project Description <span className="text-red-500">*</span>
-              </label>
-              <textarea
-                placeholder="Write a short overview of your project idea and what it aims to achieve."
-                className="w-full border border-[#D9D9D9] rounded p-2 mt-1"
-              />
-            </div>
-
-            <div>
-              <label className="text-sm font-medium">
-                Problem Statement <span className="text-red-500">*</span>
-              </label>
-              <textarea
-                placeholder="Describe the main problem"
-                className="w-full border border-[#D9D9D9] rounded p-2 mt-1"
-              />
-            </div>
-
-            <div>
-              <label className="text-sm font-medium">
-                Department <span className="text-red-500">*</span>
-              </label>
-              <select className="w-full border border-[#D9D9D9] rounded p-2 mt-1">
-                <option>CS</option>
-                <option>IT</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="text-sm font-medium">
-                Proposed Solution / Objectives{" "}
-                <span className="text-red-500">*</span>
-              </label>
-              <textarea
-                placeholder="Explain how your project will solve the problem"
-                className="w-full border border-[#D9D9D9] rounded p-2 mt-1"
-              />
-            </div>
-
-            <div>
-              <label className="text-sm font-medium">
-                Project Type <span className="text-red-500">*</span>
-              </label>
-              <select className="w-full border border-[#D9D9D9] rounded p-2 mt-1">
-                <option>Application</option>
-                <option>Research</option>
-              </select>
-            </div>
+          <div className="title-row">
+            <h1>Upload Project Idea</h1>
+            <FaLightbulb className="bulb-icon" />
           </div>
 
-          {/* Right */}
-          <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium">
-                Team Name <span className="text-red-500">*</span>
+          <p>Start your graduation project by submitting your ideas.</p>
+        </div>
+      </div>
+
+      {/* Main Card */}
+      <div className="upload-card">
+        <div className="form-grid">
+          {/* LEFT SIDE */}
+          <div className="form-column">
+            <div className="field-group">
+              <label>
+                Project Title <span>*</span>
               </label>
+
               <input
-                placeholder="Team Alpha"
-                className="w-full border border-[#D9D9D9] rounded p-2 mt-1"
+                type="text"
+                value={form.title}
+                onChange={(e) => setForm({ ...form, title: e.target.value })}
               />
             </div>
 
-            <div>
-              <label className="text-sm font-medium">
-                Team Leader <span className="text-red-500">*</span>
+            <div className="field-group">
+              <label>
+                Project Description <span>*</span>
               </label>
-              <select className="w-full border border-[#D9D9D9] rounded p-2 mt-1">
-                <option>Student Name</option>
-              </select>
-            </div>
 
-            <div>
-              <label className="text-sm font-medium">
-                Category <span className="text-red-500">*</span>
-              </label>
-              <input
-                value="Software Engineering"
-                className="w-full border border-[#D9D9D9] rounded p-2 mt-1"
-                readOnly
+              <textarea
+                value={form.description}
+                onChange={(e) =>
+                  setForm({ ...form, description: e.target.value })
+                }
               />
             </div>
 
-            <div>
-              <label className="text-sm font-medium">
-                Tools / Technologies <span className="text-red-500">*</span>
+            <div className="field-group">
+              <label>
+                Problem Statement <span>*</span>
               </label>
-              <div className="border border-[#D9D9D9] rounded p-2 mt-1">
-                <div className="flex gap-2 flex-wrap">
-                  {["Figma", "React", "Python", "Firebase"].map((tool) => (
-                    <span
-                      key={tool}
-                      className="bg-gray-100 px-2 py-1 rounded text-xs"
-                    >
-                      {tool}
-                    </span>
-                  ))}
-                </div>
 
-                <button className="text-xs text-blue-600 mt-2">
-                  + Add Tool
-                </button>
+              <textarea
+                value={form.problem_statement}
+                onChange={(e) =>
+                  setForm({ ...form, problem_statement: e.target.value })
+                }
+              />
+            </div>
+
+            <div className="field-group">
+              <label>
+                Department <span>*</span>
+              </label>
+              <div className="select-wrapper">
+                <select
+                  value={form.department_id}
+                  onChange={(e) =>
+                    setForm({ ...form, department_id: e.target.value })
+                  }
+                >
+                  {loading ? (
+                    <option>Loading...</option>
+                  ) : (
+                    departments.map((dep) => (
+                      <option key={dep.id} value={dep.id}>
+                        {dep.name}
+                      </option>
+                    ))
+                  )}
+                </select>
+
+                <FaChevronDown className="select-icon" />
               </div>
             </div>
 
-            <div>
-
-<div>
-
-              <label className="text-sm font-medium">
-                Attach Files (if any)
+            <div className="field-group">
+              <label>
+                Proposed Solution / Objectives <span>*</span>
               </label>
-  <label className="block cursor-pointer">
-    <input type="file" className="hidden" />
-
-    <div className="border border-dashed border-[#D9D9D9] rounded p-6 text-center text-sm text-gray-500 mt-1 hover:bg-gray-50 transition flex flex-col items-center gap-2">
-      
-      <FiUploadCloud className="text-3xl text-gray-400" />
-
-      <span>Drag & drop your file here or click to upload</span>
-    </div>
-  </label>
-</div>
+              <textarea
+                value={form.solution}
+                onChange={(e) => setForm({ ...form, solution: e.target.value })}
+              />
             </div>
 
-<div>
-  <label className="text-sm font-medium">Project Picture</label>
+            <div className="field-group">
+              <label>Project Type</label>
 
-  <label className="block cursor-pointer">
-    <input type="file" accept="image/*" className="hidden" />
+              <div className="select-wrapper">
+                <select
+                  value={form.project_type_id}
+                  onChange={(e) =>
+                    setForm({ ...form, project_type_id: e.target.value })
+                  }
+                >
+                  <option value="">Select Project Type</option>
 
-    <div className="border border-dashed border-[#D9D9D9] rounded p-6 text-center text-sm text-gray-500 mt-1 hover:bg-gray-50 transition flex flex-col items-center gap-2">
-      
-      <FiImage className="text-3xl text-gray-400" />
+                  {projectTypes.map((type) => (
+                    <option key={type.id} value={type.id}>
+                      {type.name}
+                    </option>
+                  ))}
+                </select>
 
-      <span>Drag & drop picture here or click to upload</span>
-    </div>
+                <FaChevronDown className="select-icon" />
+              </div>
+            </div>
+          </div>
+
+          {/* RIGHT SIDE */}
+          <div className="form-column">
+            <div className="field-group">
+              <label>
+                Team Leader <span>*</span>
+              </label>
+
+              <div className="select-wrapper">
+                <select
+                  value={form.leader_user_id}
+                  onChange={(e) =>
+                    setForm({ ...form, leader_user_id: e.target.value })
+                  }
+                >
+                  {teamMembers.map((member) => (
+                    <option key={member.id} value={member.id}>
+                      {member.name}
+                    </option>
+                  ))}
+                </select>
+
+                <FaChevronDown className="select-icon" />
+              </div>
+            </div>
+
+            <div className="field-group">
+              <label>
+                Category <span>*</span>
+              </label>
+
+              <input
+                type="text"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                placeholder="Enter category"
+              />
+            </div>
+<div className="field-group">
+  <label>
+    Tools / Technologies <span>*</span>
   </label>
+
+  {/* input wrapper */}
+  <div className="relative flex items-center rounded px-2 py-1 bg-white focus-within:ring-2 focus-within:ring-blue-200">
+    
+    <input
+      type="text"
+      value={toolInput}
+      onChange={(e) => setToolInput(e.target.value)}
+      onKeyDown={handleKeyDown}
+      placeholder="Add tool like React..."
+      className="flex-1 outline-none p-2"
+    />
+
+    <button
+      type="button"
+      onClick={addTool}
+      className="ml-2 px-3 py-1 text-sm bg-gray-100 text-gray-600 rounded-md hover:bg-gray-200 transition"
+    >
+      Add
+    </button>
+  </div>
+
+  {/* tags */}
+  <div className="flex flex-wrap gap-2 mt-2">
+    {tools.map((tool, index) => (
+      <span
+        key={index}
+        className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full flex items-center gap-2"
+      >
+        {tool}
+
+        <button
+          type="button"
+          onClick={() => removeTool(index)}
+          className="text-red-500"
+        >
+          ✕
+        </button>
+      </span>
+    ))}
+  </div>
 </div>
+            <div className="field-group">
+              <label>Attach Files (if any):</label>
+
+              <label className="upload-box cursor-pointer flex items-center gap-3">
+                <FaPaperclip className="text-gray-600" />
+
+                <span>
+                  {files
+                    ? files.name
+                    : "Drag & drop your file here or click to upload"}
+                </span>
+
+                <input
+                  type="file"
+                  className="hidden"
+                  onChange={handleFileChange}
+                />
+              </label>
+            </div>
+
+            <div className="field-group">
+              <label>Project Picture:</label>
+
+              <label className="upload-box cursor-pointer flex items-center gap-3">
+                <FaPaperclip className="text-gray-600" />
+
+                <span>
+                  {image
+                    ? image.name
+                    : "Drag & drop picture here or click to upload"}
+                </span>
+
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleImageChange}
+                />
+              </label>
+            </div>
           </div>
         </div>
 
         {/* Submit */}
-        <div className="flex justify-center mt-6">
-          <button className="bg-blue-600 text-white px-10 py-2 rounded-lg">
-            Submit
-          </button>
+        <div className="submit-wrapper">
+         <button className="submit-btn" onClick={handleSubmit}>
+  Submit
+</button>
         </div>
       </div>
     </div>
   );
-};
-
-export default UploadProjectIdea;
+}
