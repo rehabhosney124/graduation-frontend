@@ -1,39 +1,35 @@
 import { createBrowserRouter } from "react-router-dom";
-
 import Layout from "../Pages/Layouts/StudentLayout";
 import NoTeamRoute from "../Components/NoTeamRoute";
 import ForgetPassword from "../Pages/ForgetPassword";
 import VerifyOTP from "../Pages/VerifyOTP";
 import ResetPassword from "../Pages/ResetPassword";
-
 import Doctor from "../Pages/Doctor";
-
 import Tasks from "../Components/Tasks";
-
 import AiFilterLayout from "../Pages/AiFilterLayout";
 import MilestoneDetails from "../pages/MilestoneDetails";
 import ProjectsManagedTeams from "../Pages/ProjectsManagedTeams";
-
 import ProjectDetails from "../Pages/ProjectDetails";
-
 import PreviousProjectDetails from "../Pages/PreviuosProjectDetails";
-
 import JoinRequests from "../Pages/JoinRequests";
-
 import StudentDashboard from "../Pages/studentDashboard";
-
 import NotificationsPage from "../Pages/Notifications";
-
 import ProjectTypes from "../Pages/projectType";
-
 import UploadProjectIdea from "../Pages/UploadProjectIdea";
-
 import Login from "../Pages/auth/Login";
-
 import EditStudentProfile from "../Pages/EditStudentProfile";
-
 import ProtectedRoute from "../Components/ProtectedRoute";
-
+import EditDoctorProfile from "../Pages/EditDoctorProfile";
+import DoctorDashboard from "../Pages/DoctorDashboard";
+import Milestones from "../Pages/Milestones";
+import TeamProjectRules from "../Pages/TeamProjectRules";
+import StudentsManagement from "../Pages/Management";
+import AIFilterPage_admin from "../Pages/aifilter-admin";
+import MilestonesSetup from "../Pages/Milestonessetup";
+import SuggestionsProjectsPage from "../Pages/SuggestionsprojectsPage";
+import TeamsSection from "./../Pages/Teamspage";
+import FinalDiscussionsSection from "../Pages/Finaldiscussionssection";
+// import EditProfile from "../Pages/EditStudentProfile";
 import EditProfile from "../Pages/EditStudentProfile";
 import RequestsPageNotInTeam from "../Pages/RequestsPageNotInTeam";
 import PoliciesPage from "../Pages/PoliciesPage";
@@ -49,6 +45,10 @@ import ReceivedRequests from "../pages/ReceivedRequests";
 import AllProjectsPage from "../Pages/AllProjectsPage";
 import TeamPage from "../Pages/TeamPage";
 export const router = createBrowserRouter([
+  { path: "/login", element: <Login /> },
+  { path: "/forget-password", element: <ForgetPassword /> },
+  { path: "/verify-otp", element: <VerifyOTP /> },
+  { path: "/reset-password", element: <ResetPassword /> },
   // ================= AUTH =================
 
   {
@@ -71,14 +71,86 @@ export const router = createBrowserRouter([
     element: <ResetPassword />,
   },
 
-  // ================= PROFILE =================
+  // ================= PROFILE =============
 
   {
     path: "/edit-profile",
 
     element: (
       <ProtectedRoute>
-        <EditProfile />
+        <EditDoctorProfile />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/doctor-dashboard",
+    element: (
+      <ProtectedRoute>
+        <DoctorDashboard />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/milestones",
+    element: (
+      <ProtectedRoute>
+        <Milestones />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/rules",
+    element: (
+      <ProtectedRoute>
+        <TeamProjectRules />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/management",
+    element: (
+      <ProtectedRoute>
+        <StudentsManagement />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/admin-ai-filter",
+    element: (
+      <ProtectedRoute>
+        <AIFilterPage_admin />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/admin-milestones",
+    element: (
+      <ProtectedRoute>
+        <MilestonesSetup />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/suggestions-projects",
+    element: (
+      <ProtectedRoute>
+        <SuggestionsProjectsPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/admin-teams",
+    element: (
+      <ProtectedRoute>
+        <TeamsSection />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/final-discussions",
+    element: (
+      <ProtectedRoute>
+        <FinalDiscussionsSection/>
       </ProtectedRoute>
     ),
   },
@@ -106,6 +178,8 @@ export const router = createBrowserRouter([
         element: <AiFilterLayout />,
 
         children: [
+          { index: true, element: <div></div> },
+          { path: "team", element: <div>Team Content</div> },
           {
             index: true,
             element: <div></div>,

@@ -1,44 +1,31 @@
-
 import Header from "../Components/Header";
 import Sidebar from "../Components/Sidebar";
 import { useState } from "react";
-import { useState,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaCamera } from "react-icons/fa";
 import { useProfile } from "../context/ProfileContext";
 import { FaUserCircle } from "react-icons/fa";
-import Auth from "../Services/Auth.model";
-import Project from "../Services/Project.model";
-export default function EditProfile() {
+// import ProfileSidebar from "../components/ProfileSidebar";
+
+export default function EditDoctorProfile() {
   const navigate = useNavigate();
+
   const { profileImage, saveProfile } = useProfile();
-const [departments, setDepartments] = useState([]);
-  const { profileImage, saveProfileImage } = useProfile();
 
   const [previewImage, setPreviewImage] = useState(profileImage);
-const [profileImageFile, setProfileImageFile] = useState(null);
-const [formData, setFormData] = useState({
-  full_name: "",
-  track_name: "AI",
-  department_id: "",
-  gpa: "",
-  phone: "",
-  email: "",
-});
 
-  useEffect(() => {
-  const fetchDepartments = async () => {
-    try {
-      const response = await Project.getDepartments();
-      console.log("Departments:", response);
-      setDepartments(response);
-    } catch (error) {
-      console.log("Failed to fetch departments", error);
-    }
-  };
+  const [formData, setFormData] = useState({
+    name: "",
+    faculty: "Computer and Artificial Intelligence",
+    track: "AI",
+    department: "CS",
+    universityEmail: "",
+    city: "BeniSuef",
+    phone: "",
+    email: "",
+    password: "",
+  });
 
-  fetchDepartments();
-}, []);
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -48,40 +35,20 @@ const [formData, setFormData] = useState({
     }));
   };
 
-const handleImageChange = (e) => {
-  const file = e.target.files[0];
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
 
-  if (file) {
-    setProfileImageFile(file);
-
-    const url = URL.createObjectURL(file);
-    setPreviewImage(url);
-  }
-};
-
-const handleSubmit = async (e) => {
-  e.preventDefault();
-
-  try {
-    const data = new FormData();
-
-    data.append("full_name", formData.full_name);
-    data.append("email", formData.email);
-    data.append("phone", formData.phone);
-    data.append("track_name", formData.track_name);
-    data.append("department_id", formData.department_id);
-    data.append("gpa", formData.gpa);
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreviewImage(reader.result);
       };
       reader.readAsDataURL(file);
-    if (profileImageFile) {
-      data.append("profile_image_url", profileImageFile);
     }
+  };
 
-    await Auth.updateProfile(data);
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
     if (
       !formData.name ||
@@ -95,23 +62,18 @@ const handleSubmit = async (e) => {
     }
 
     saveProfile(previewImage, formData.name);
+
     navigate("/doctor-dashboard");
   };
-    alert("Profile updated successfully");
-
-    navigate("/doctor");
-  } catch (error) {
-    console.log(error);
-
-    alert("Failed to update profile");
-  }
-};
   return (
-    <div className="flex  bg-gray-50">
+    <div className="flex min-h-screen bg-gray-200">
       {/* Sidebar */}
+      <Sidebar />
 
       {/* Main */}
       <div className="flex-1 flex flex-col ">
+        <Header />
+
         <div className="">
           {/* Header Section */}
           <div className=" p-3 mb-1 flex items-center gap-6">
@@ -145,28 +107,42 @@ const handleSubmit = async (e) => {
           </div>
 
           {/* Form */}
-<form onSubmit={handleSubmit} className="p-6">
-  
-  {/* Fields Grid */}
-  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <form
+            onSubmit={handleSubmit}
+            className=" p-6 grid grid-cols-1 md:grid-cols-3 gap-6"
+          >
             {/* Name */}
             <div>
               <label className="block  mb-2 font-medium">Name</label>
               <input
-                name="full_name"
-  value={formData.full_name}
+                name="name"
+                value={formData.name}
                 onChange={handleChange}
                 className="w-full  bg-white  rounded-md px-4 py-2"
               />
             </div>
 
+            {/* Faculty */}
+            <div>
+              <label className="block mb-2 font-medium">Faculty</label>
+              <select
+                name="faculty"
+                value={formData.faculty}
+                onChange={handleChange}
+                className="w-full border-0 rounded-md px-4 py-2"
+              >
+                <option>Computer and Artificial Intelligence</option>
+                <option>Engineering</option>
+                <option>Science</option>
+              </select>
+            </div>
 
             {/* Track */}
             <div>
               <label className="block mb-2 font-medium">Track</label>
               <select
-               name="track_name"
-  value={formData.track_name}
+                name="track"
+                value={formData.track}
                 onChange={handleChange}
                 className="w-full  border-0  rounded-md px-4 py-2"
               >
@@ -179,37 +155,43 @@ const handleSubmit = async (e) => {
             {/* Department */}
             <div>
               <label className="block mb-2 font-medium">Department</label>
-<select
-  name="department_id"
-  value={formData.department_id}
-  onChange={handleChange}
-  className="w-full border-0 rounded-md px-4 py-2"
->
-  <option value="">Select Department</option>
-
-  {Array.isArray(departments) &&
-    departments.map((dept) => (
-      <option key={dept.id} value={dept.id}>
-        {dept.name}
-      </option>
-    ))}
-</select>
+              <select
+                name="department"
+                value={formData.department}
+                onChange={handleChange}
+                className="w-full  border-0 rounded-md px-4 py-2"
+              >
+                <option>CS</option>
+                <option>IT</option>
+              </select>
             </div>
 
-            {/*  GPA */}
+            {/* University Email */}
             <div>
-              <label className="block mb-2 font-medium">GPA</label>
-<input
-  type="number"
-  name="gpa"
-  value={formData.gpa}
-  onChange={handleChange}
-  className="w-full border-0 rounded-md px-4 py-2"
-/>
+              <label className="block mb-2 font-medium">University Email</label>
+              <input
+                type="email"
+                name="universityEmail"
+                value={formData.universityEmail}
+                onChange={handleChange}
+                className="w-full border-0 rounded-md px-4 py-2"
+              />
             </div>
 
             {/* City */}
-
+            <div>
+              <label className="block mb-2 font-medium">City</label>
+              <select
+                name="city"
+                value={formData.city}
+                onChange={handleChange}
+                className="w-full border-0 rounded-md px-4 py-2"
+              >
+                <option>BeniSuef</option>
+                <option>Cairo</option>
+                <option>Giza</option>
+              </select>
+            </div>
 
             {/* Phone */}
             <div>
@@ -244,17 +226,7 @@ const handleSubmit = async (e) => {
                 className="w-full border-0  bg-white rounded-md px-4 py-2"
               />
             </div>
-  </div>
 
-  {/* Submit Button */}
-  <div className="mt-8 flex justify-center">
-    <button
-      type="submit"
-      className="bg-blue-600 text-white px-16 py-4 rounded-md hover:bg-blue-700 transition"
-    >
-      Save Changes
-    </button>
-  </div>
             {/* Button */}
             <div className="md:col-span-3">
               <button
@@ -266,7 +238,7 @@ const handleSubmit = async (e) => {
                   !formData.phone ||
                   !formData.password
                 }
-                className="bg-blue-600 disabled:bg-gray-400 text-white px-16 py-4 rounded-md hover:bg-blue-700 transition"
+                className="bg-blue-600 disabled:bg-gray-400 text-white px-15 py-3 rounded-md hover:bg-blue-700 transition"
               >
                 Save Changes
               </button>

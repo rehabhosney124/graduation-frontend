@@ -8,13 +8,13 @@ class Student {
   static getProposals() {
     return submitRequestAsync("proposal", "GET");
   }
-    static getProjectTypes() {
+  static getProjectTypes() {
     return submitRequestAsync("project-types", "GET");
   }
-      static submitIdea() {
+  static submitIdea() {
     return submitRequestAsync("/proposal/submit", "GET");
   }
-        static getStudents() {
+  static getStudents() {
     return submitRequestAsync("admin/student", "GET");
   }
     static getAvailableStudents() {
@@ -24,7 +24,5 @@ class Student {
   return submitRequestAsync(`home`, "GET");
 } 
 }
-
-
 
 export default Student;

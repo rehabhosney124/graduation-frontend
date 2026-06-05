@@ -11,7 +11,9 @@ import {
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import logo from '../../assets/logo2.png';
 import Auth from "../../Services/Auth.model"; 
-import Student from "../../Services/student.model";
+import { useAuth } from "../../context/AuthContext";
+// import Student from "../../Services/ٍStudent.model";
+// import { useAuth } from "../../context/AuthContext";
 const styles = {
   mainContainer: {
     minHeight: "100vh",
@@ -78,6 +80,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
 const handleLogin = async () => {
   if (!id || !password) {
     alert("Please enter both ID and Password");
@@ -92,6 +95,7 @@ const handleLogin = async () => {
     if (loginResponse?.token) {
       localStorage.setItem("token", loginResponse.token);
       localStorage.setItem("user", JSON.stringify(loginResponse.user));
+      login();
       navigate("/");
     }
   } catch (error) {
