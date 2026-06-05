@@ -7,7 +7,7 @@ import { useProfile } from "../context/ProfileContext";
 import { FaUserCircle } from "react-icons/fa";
 // import ProfileSidebar from "../components/ProfileSidebar";
 
-export default function EditProfile() {
+export default function EditDoctorProfile() {
   const navigate = useNavigate();
 
   const { profileImage, saveProfile } = useProfile();
@@ -66,11 +66,14 @@ export default function EditProfile() {
     navigate("/doctor-dashboard");
   };
   return (
-    <div className="flex  bg-gray-50">
+    <div className="flex min-h-screen bg-gray-200">
       {/* Sidebar */}
+      <Sidebar />
 
       {/* Main */}
       <div className="flex-1 flex flex-col ">
+        <Header />
+
         <div className="">
           {/* Header Section */}
           <div className=" p-3 mb-1 flex items-center gap-6">
@@ -235,7 +238,7 @@ export default function EditProfile() {
                   !formData.phone ||
                   !formData.password
                 }
-                className="bg-blue-600 disabled:bg-gray-400 text-white px-16 py-4 rounded-md hover:bg-blue-700 transition"
+                className="bg-blue-600 disabled:bg-gray-400 text-white px-15 py-3 rounded-md hover:bg-blue-700 transition"
               >
                 Save Changes
               </button>

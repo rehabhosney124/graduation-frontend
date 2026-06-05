@@ -13,9 +13,9 @@ import NotificationsPage from "../Pages/Notifications";
 import ProjectTypes from "../Pages/projectType";
 import UploadProjectIdea from "../Pages/UploadProjectIdea";
 import Login from "../Pages/auth/Login";
-// import EditStudentProfile from "../Pages/EditStudentProfile";
+import EditStudentProfile from "../Pages/EditStudentProfile";
 import ProtectedRoute from "../Components/ProtectedRoute";
-// import EditProfile from "../Pages/EditProfile";
+import EditDoctorProfile from "../Pages/EditDoctorProfile";
 import DoctorDashboard from "../Pages/DoctorDashboard";
 import Milestones from "../Pages/Milestones";
 import TeamProjectRules from "../Pages/TeamProjectRules";
@@ -25,9 +25,13 @@ import MilestonesSetup from "../Pages/Milestonessetup";
 import SuggestionsProjectsPage from "../Pages/SuggestionsprojectsPage";
 import TeamsSection from "./../Pages/Teamspage";
 import FinalDiscussionsSection from "../Pages/Finaldiscussionssection";
-import EditProfile from "../Pages/EditStudentProfile";
+// import EditProfile from "../Pages/EditStudentProfile";
+import PoliciesPage from "../Pages/PoliciesPage";
+import ReportProblem from "../Pages/ReporProblem";
+import Home from "../Pages/Home";
+import UserInfo from "../Pages/UserInfo";
 export const router = createBrowserRouter([
-  { path: "/logingit ", element: <Login /> },
+  { path: "/login", element: <Login /> },
   { path: "/forget-password", element: <ForgetPassword /> },
   { path: "/verify-otp", element: <VerifyOTP /> },
   { path: "/reset-password", element: <ResetPassword /> },
@@ -36,7 +40,7 @@ export const router = createBrowserRouter([
     path: "/edit-profile",
     element: (
       <ProtectedRoute>
-        <EditProfile />
+        <EditDoctorProfile />
       </ProtectedRoute>
     ),
   },
@@ -147,8 +151,11 @@ export const router = createBrowserRouter([
 
   // 👇 دول برا root route
   {
-    path: "student-dashboard",
-    element: <StudentDashboard />,
+    path: "/",
+    element: <Home />,
+      children: [
+    { path: "Upload-Project-Idea", element: <UploadProjectIdea /> },
+  ],
   },
   {
     path: "notifications",
@@ -163,7 +170,12 @@ export const router = createBrowserRouter([
     element: <UploadProjectIdea />,
   },
     {
-    path: "/profile",
-    element: <EditProfile />,
-  },
+  path: "/user",
+  element: <UserInfo />,
+  children: [
+    { path: "profile", element: <EditStudentProfile /> },
+    { path: "policies", element: <PoliciesPage /> },
+    { path: "report-problem", element: <ReportProblem /> },
+  ],
+},
 ]);

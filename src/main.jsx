@@ -7,7 +7,7 @@ import { AuthProvider } from "./context/AuthContext";
 import "./index.css";
 import App from './App.jsx'
 import { ProfileProvider } from "./context/ProfileContext";
-import { AcademicYearProvider } from "./context/Academicyearcontext";
+import { AcademicYearProvider } from "./context/AcademicYearContext.jsx";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
       <Toaster />
